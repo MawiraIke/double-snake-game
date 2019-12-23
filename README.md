@@ -1,14 +1,17 @@
-# double-snake-game
+###"Snakes"
 
-A Clojure library designed to ... well, that part is up to you.
+The snake game, but with two snakes instead.
 
-## Usage
+I mean who plays the snake game in 2020? People are too smart for that. Try this snake game with two snakes instead.
+Just make sure the snakes don't bite themselves or the other or any walls.
 
-FIXME
+Enjoy yourself. Set your hair on fire.
+
+Ps: This game is not made for commercial purposes, it was just made to test if this idea is possible to play, and by how far.
 
 ## License
 
-Copyright © 2019 FIXME
+Copyright © 2019 Ike Mawira
 
 This program and the accompanying materials are made available under the
 terms of the Eclipse Public License 2.0 which is available at
