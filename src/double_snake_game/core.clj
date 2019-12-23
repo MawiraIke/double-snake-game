@@ -7,8 +7,9 @@
 ;   You must not remove this notice, or any other, from this software.
 
 (ns double-snake-game.core
-  (:import (java.awt.event KeyEvent)
-           (java.awt Color)))
+  (:import (java.awt.event KeyEvent ActionListener KeyListener)
+           (java.awt Color Dimension)
+           (javax.swing JPanel JOptionPane)))
 
 
 ;; Functional model --------------------------------------------------------------
@@ -21,28 +22,24 @@
 (def win-length 50)
 
 ;; directions for the snake controlled by the right hand
-(def directions-r
+(def directions
   {KeyEvent/VK_LEFT  [-1 0]
    KeyEvent/VK_RIGHT [1 0]
    KeyEvent/VK_UP    [0 -1]
-   KeyEvent/VK_DOWN  [0 1]})
+   KeyEvent/VK_DOWN  [0 1]
 
-;; directions for the snake controlled by the left hand
-(def directions-l
-  {KeyEvent/VK_A [-1 0]
-   KeyEvent/VK_D [1 0]
-   KeyEvent/VK_W [0 -1]
-   KeyEvent/VK_S [0 1]})
+   KeyEvent/VK_A     [-1 0]
+   KeyEvent/VK_D     [1 0]
+   KeyEvent/VK_W     [0 -1]
+   KeyEvent/VK_S     [0 1]})
 
 (defn create-snake [side]
   {:body      (if (= side "R") (list [3 0] [2 0] [1 0] [0 0])
                                (list [0 1] [1 1] [2 1] [3 1]))
    :direction (if (= side "R") [1 0]
                                [-1 0])
-   :type      (if (= side "R") :snake_r
-                               :snake_l)
-   :color     (if (= side "R") (Color. 15 160 70)
-                               (Color. 15 160 70))})
+   :type      :snake
+   :color     (Color. 15 160 70)})
 
 (defn create-apple []
   {:location [(rand-int field-width) (rand-int field-height)]
@@ -82,6 +79,11 @@
 (defn eats? [{[head] :body} {apple :location}]
   (= head apple))
 
+(defn snake-pos [code]
+  (if (or (= code KeyEvent/VK_DOWN) (= code KeyEvent/VK_UP)
+          (= code KeyEvent/VK_RIGHT) (= code KeyEvent/VK_LEFT))
+    "R" "L"))
+
 
 ;; Mutable model -----------------------------------------------------------------
 
@@ -104,6 +106,59 @@
     (ref-set snake-l (create-snake "L"))
     (ref-set apple (create-apple)))
   nil)
+
+
+
+;; GUI
+
+(defn fill-point [g pt color]
+  (let [[x y width height] (point-to-screen-rect pt)]
+    (.setColor g color)
+    (.fillRect g x y width height)))
+
+(defmulti paint (fn [g object] (:type object)))
+
+(defmethod paint :apple [g {:keys [location color]}]
+  (fill-point g location color))
+
+(defmethod paint :snake [g {:keys [body color]}]
+  (doseq [point body]
+    (fill-point g point color)))
+
+(defn game-panel [frame snake-r snake-l apple]
+  (proxy [JPanel ActionListener KeyListener] []
+    ;JPanel
+    (paintComponent [g]
+      (proxy-super paintComponent g)
+      (paint g @apple)
+      (paint g @snake-r)
+      (paint g @snake-l))
+    (getPrefferedSize []
+      (Dimension. (* (inc field-width) point-size)
+                  (* (inc field-height) point-size)))
+    ;ActionListener
+    (actionPerformed [e]
+      (update-positions snake-r apple)
+      (update-positions snake-l apple)
+      (if (or (lose? @snake-r) (lose? @snake-l))
+        (do
+          (reset-game snake-r snake-l apple)
+          (JOptionPane/showMessageDialog frame "You lose!")))
+      (if (or (win? snake-r) (win? snake-l))
+        (do
+          (reset-game snake-r snake-l apple)
+          (JOptionPane/showMessageDialog frame "You win!")))
+      (.repaint this))
+    ;KeyListener
+    (keyPressed [e]
+      (let [direction (directions (.getKeyCode e))
+            snake-d (snake-pos (.getKeyCode e))]
+        (if direction
+          (update-direction (if (= snake-d "R" snake-r snake-l)) direction))))
+    (keyReleased [e])
+    (keyTyped [e])))
+
+
 
 
 
