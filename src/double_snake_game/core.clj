@@ -35,11 +35,12 @@
 
 (defn create-snake [side]
   {:body      (if (= side "R") (list [3 0] [2 0] [1 0] [0 0])
-                               (list [0 1] [1 1] [2 1] [3 1]))
+                               (list [3 1] [2 1] [1 1] [0 1]))
    :direction (if (= side "R") [1 0]
-                               [-1 0])
+                               [1 0])
    :type      :snake
-   :color     (Color. 15 160 70)})
+   :color     (if (= side "R") (Color. 15 160 70)
+                               (Color. 49 120 39))})
 
 (defn create-apple []
   {:location [(rand-int field-width) (rand-int field-height)]
@@ -69,7 +70,7 @@
   (or
     (> head-x field-height)
     (< head-x 0)
-    (> head-x field-width)
+    (> head-y field-height)
     (< head-y 0)))
 
 (defn lose? [{[head & body] :body}]
@@ -133,7 +134,7 @@
       (paint g @apple)
       (paint g @snake-r)
       (paint g @snake-l))
-    (getPrefferedSize []
+    (getPreferredSize []
       (Dimension. (* (inc field-width) point-size)
                   (* (inc field-height) point-size)))
     ;ActionListener
@@ -154,7 +155,7 @@
       (let [direction (directions (.getKeyCode e))
             snake-d (snake-pos (.getKeyCode e))]
         (if direction
-          (update-direction (if (= snake-d "R" snake-r snake-l)) direction))))
+          (update-direction (if (= snake-d "R") snake-r snake-l) direction))))
     (keyReleased [e])
     (keyTyped [e])))
 
