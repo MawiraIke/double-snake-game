@@ -9,7 +9,7 @@
 (ns double-snake-game.core
   (:import (java.awt.event KeyEvent ActionListener KeyListener)
            (java.awt Color Dimension)
-           (javax.swing JPanel JOptionPane)))
+           (javax.swing JPanel JOptionPane JFrame Timer)))
 
 
 ;; Functional model --------------------------------------------------------------
@@ -158,6 +158,26 @@
     (keyReleased [e])
     (keyTyped [e])))
 
+
+
+;; Play -------------------------------------------------------------------------
+
+(defn game []
+  (let [snake-r (ref (create-snake "R"))
+        snake-l (ref (create-snake "L"))
+        apple (ref (create-apple))
+        frame (JFrame. "Snake")
+        panel (game-panel frame snake-r snake-l apple)
+        timer (Timer. turn-millis panel)]
+    (.setFocusable panel true)
+    (.addKeyListener panel panel)
+
+    (.add frame panel)
+    (.pack frame)
+    (.setDefaultCloseOperation frame JFrame/EXIT_ON_CLOSE)
+    (.setVisible frame true)
+
+    (.start timer)))
 
 
 
