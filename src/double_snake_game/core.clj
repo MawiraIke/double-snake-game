@@ -19,14 +19,16 @@
 (def point-size 10)
 (def turn-millis 50)
 (def win-length 50)
+
 ;; directions for the snake controlled by the right hand
-(def direction-r
+(def directions-r
   {KeyEvent/VK_LEFT  [-1 0]
    KeyEvent/VK_RIGHT [1 0]
    KeyEvent/VK_UP    [0 -1]
    KeyEvent/VK_DOWN  [0 1]})
+
 ;; directions for the snake controlled by the left hand
-(def direction-l
+(def directions-l
   {KeyEvent/VK_A [-1 0]
    KeyEvent/VK_D [1 0]
    KeyEvent/VK_W [0 -1]
@@ -79,3 +81,52 @@
 
 (defn eats? [{[head] :body} {apple :location}]
   (= head apple))
+
+
+;; Mutable model -----------------------------------------------------------------
+
+(defn update-positions [snake apple]
+  (dosync
+    (if (eats? @snake @apple)
+      (do
+        (ref-set apple (create-apple))
+        (alter snake move :grow))
+      (alter snake move)))
+  nil)
+
+(defn update-direction [snake direction]
+  (dosync (alter snake turn direction))
+  nil)
+
+(defn reset-game [snake-r snake-l apple]
+  (dosync
+    (ref-set snake-r (create-snake "R"))
+    (ref-set snake-l (create-snake "L"))
+    (ref-set apple (create-apple)))
+  nil)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
