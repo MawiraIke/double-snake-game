@@ -2,9 +2,6 @@
 
 The snake game, but with two snakes instead.
 
-I mean who plays the snake game in 2020? People are too smart for that. Try this snake game with two snakes instead.
-Just make sure the snakes don't bite themselves or the other or any walls.
-
 Enjoy yourself. Set your hair on fire.
 
 Ps: This game is not made for commercial purposes, it was just made to test if this idea is possible to play, and by how far.
