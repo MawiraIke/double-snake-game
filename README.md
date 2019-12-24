@@ -13,7 +13,7 @@ If you have git installed,
 then repeat step one.
 2. Assuming you have Leiningen installed run 
 ```lein run -m double-snake-game.core``` 
-from the root of this project.
+from the root of this project else run the jar file in the ```.\target``` folder
 
 Use the arrow and WASD keys to control the snakes.
 
