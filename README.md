@@ -4,7 +4,7 @@ The snake game, but with two snakes instead.
 
 Enjoy yourself. Set your hair on fire.
 
-Ps: This game is not made for commercial purposes, it was just made to test if this idea is possible to play, and by 
+Ps: Just for fun, this game was just made to test if this idea is possible to play, and by 
 how far.
 
 ### Steps to play
