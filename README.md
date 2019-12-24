@@ -15,6 +15,7 @@ then repeat step one.
 ```java -jar target/double-snake-game-0.1.0-SNAPSHOT-standalone.jar``` 
 from the root of this project.
 
+Use the arrow and WASD keys to control the snakes.
 
 ## License
 
