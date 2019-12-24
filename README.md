@@ -11,8 +11,8 @@ how far.
 If you have git installed, 
 1. Clone this repo. If git is not installed, get it [here](https://www.atlassian.com/git/tutorials/install-git) and 
 then repeat step one.
-2. Assuming you have java installed run 
-```java -jar target/double-snake-game-0.1.0-SNAPSHOT-standalone.jar``` 
+2. Assuming you have Leiningen installed run 
+```lein run -m double-snake-game.core``` 
 from the root of this project.
 
 Use the arrow and WASD keys to control the snakes.
