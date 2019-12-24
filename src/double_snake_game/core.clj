@@ -7,6 +7,7 @@
 ;   You must not remove this notice, or any other, from this software.
 
 (ns double-snake-game.core
+  (:gen-class)
   (:import (java.awt.event KeyEvent ActionListener KeyListener)
            (java.awt Color Dimension)
            (javax.swing JPanel JOptionPane JFrame Timer)))
@@ -195,7 +196,8 @@
 
     (.start timer)))
 
-
+(defn -main [& args]
+  (game))
 
 
 
