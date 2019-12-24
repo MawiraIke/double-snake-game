@@ -47,6 +47,10 @@
    :color    (Color. 210 50 90)
    :type     :apple})
 
+(defn create-score []
+  {:snake-l 0
+   :snake-r 0})
+
 (defn point-to-screen-rect [[pt-x pt-y]]
   [(* pt-x point-size) (* pt-y point-size) point-size point-size])
 
@@ -56,6 +60,11 @@
                            [dir-x dir-y] direction]
                        [(+ head-x dir-x) (+ head-y dir-y)])
                      (if grow body (butlast body)))))
+
+(defn increase-score [{:keys [snake-l snake-r] :as score} snake]
+  (if (= snake "R")
+    (assoc score :snake-r (inc snake-r))
+    (assoc score :snake-l (inc snake-l))))
 
 (defn turn [snake direction]
   (assoc snake :direction direction))
@@ -88,10 +97,11 @@
 
 ;; Mutable model -----------------------------------------------------------------
 
-(defn update-positions [snake apple]
+(defn update-positions [snake apple score pos]
   (dosync
     (if (eats? @snake @apple)
-      (do
+      (dosync
+        (ref-set score (alter score increase-score pos))
         (ref-set apple (create-apple))
         (alter snake move :grow))
       (alter snake move)))
@@ -101,8 +111,9 @@
   (dosync (alter snake turn direction))
   nil)
 
-(defn reset-game [snake-r snake-l apple]
+(defn reset-game [snake-r snake-l apple score]
   (dosync
+    (ref-set score (create-score))
     (ref-set snake-r (create-snake "R"))
     (ref-set snake-l (create-snake "L"))
     (ref-set apple (create-apple)))
@@ -126,7 +137,7 @@
   (doseq [point body]
     (fill-point g point color)))
 
-(defn game-panel [frame snake-r snake-l apple]
+(defn game-panel [frame snake-r snake-l apple score]
   (proxy [JPanel ActionListener KeyListener] []
     ;JPanel
     (paintComponent [g]
@@ -139,16 +150,19 @@
                   (* (inc field-height) point-size)))
     ;ActionListener
     (actionPerformed [e]
-      (update-positions snake-r apple)
-      (update-positions snake-l apple)
+      (update-positions snake-r apple score "R")
+      (update-positions snake-l apple score "L")
       (if (or (lose? @snake-r) (lose? @snake-l))
-        (do
-          (reset-game snake-r snake-l apple)
-          (JOptionPane/showMessageDialog frame "You lose!")))
+        (let [ol-score @score]
+          (reset-game snake-r snake-l apple score)
+          (JOptionPane/showMessageDialog
+            frame (str "You lose! Your score, " (+ (:snake-l ol-score) (:snake-r ol-score))))))
       (if (or (win? snake-r) (win? snake-l))
-        (do
-          (reset-game snake-r snake-l apple)
-          (JOptionPane/showMessageDialog frame "You win!")))
+        (let [ol-score @score]
+          (reset-game snake-r snake-l apple score)
+          (JOptionPane/showMessageDialog
+            frame
+            (str "You win!, Your score, " (+ (:snake-l ol-score) (:snake-r ol-score))))))
       (.repaint this))
     ;KeyListener
     (keyPressed [e]
@@ -167,8 +181,9 @@
   (let [snake-r (ref (create-snake "R"))
         snake-l (ref (create-snake "L"))
         apple (ref (create-apple))
+        score (ref (create-score))
         frame (JFrame. "Snake")
-        panel (game-panel frame snake-r snake-l apple)
+        panel (game-panel frame snake-r snake-l apple score)
         timer (Timer. turn-millis panel)]
     (.setFocusable panel true)
     (.addKeyListener panel panel)
