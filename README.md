@@ -4,17 +4,18 @@ The snake game, but with two snakes instead.
 
 Enjoy yourself. Set your hair on fire.
 
-Ps: This game is not made for commercial purposes, it was just made to test if this idea is possible to play, and by 
+Ps: Just for fun, this game was just made to test if this idea is possible to play, and by 
 how far.
 
 ### Steps to play
 If you have git installed, 
 1. Clone this repo. If git is not installed, get it [here](https://www.atlassian.com/git/tutorials/install-git) and 
 then repeat step one.
-2. Assuming you have java installed run 
-```java -jar target/double-snake-game-0.1.0-SNAPSHOT-standalone.jar``` 
-from the root of this project.
+2. Assuming you have Leiningen installed run 
+```lein run -m double-snake-game.core``` 
+from the root of this project else run the jar file in the ```.\target``` folder
 
+Use the arrow and WASD keys to control the snakes.
 
 ## License
 
