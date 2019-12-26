@@ -124,7 +124,7 @@
 
 ;; GUI
 
-(defn fill-point [g pt color]
+(defn fill-point [g pt ^Color color]
   (let [[x y width height] (point-to-screen-rect pt)]
     (.setColor g color)
     (.fillRect g x y width height)))
@@ -138,7 +138,7 @@
   (doseq [point body]
     (fill-point g point color)))
 
-(defn game-panel [frame snake-r snake-l apple score]
+(defn game-panel [^JFrame frame snake-r snake-l apple score]
   (proxy [JPanel ActionListener KeyListener] []
     ;JPanel
     (paintComponent [g]
