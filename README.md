@@ -7,6 +7,10 @@ Enjoy yourself. Set your hair on fire.
 Ps: Just for fun, this game was just made to test if this idea is possible to play, and by 
 how far.
 
+### Steps to play (with clojure CLI)
+
+run `clj -Sdeps '{:deps {double-snake-game {:git/url "https://github.com/MawiraIke/double-snake-game.git" :sha "42a47c8bdbeb37ca2e6c6bf2e8051bf6f5c656b7"}}}' -m double-snake-game.core`
+
 ### Steps to play
 If you have git installed, 
 1. Clone this repo. If git is not installed, get it [here](https://www.atlassian.com/git/tutorials/install-git) and 
