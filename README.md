@@ -1,5 +1,7 @@
 ### "Snakes"
 
+[![codecov](https://codecov.io/gh/MawiraIke/double-snake-game/branch/master/graph/badge.svg)](https://codecov.io/gh/MawiraIke/double-snake-game)
+
 The snake game, but with two snakes instead.
 
 Enjoy yourself. Set your hair on fire.
